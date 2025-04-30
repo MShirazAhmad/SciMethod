@@ -118,7 +118,15 @@ Rendered using:
 
 ## 🛡 License
 
-This project is licensed under the MIT License.
+This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.  
+To view a copy of this license, visit [http://creativecommons.org/licenses/by-nc/4.0/](http://creativecommons.org/licenses/by-nc/4.0/)
+
+### 📌 Attribution Required
+
+If you fork, reuse, or adapt this project, you must **retain the original GitHub link** and credit **M. Shiraz Ahmad** as the original author.  
+Unauthorized re-publication under a different name or branding is **strictly prohibited**.
+
+GitHub: [https://github.com/MShirazAhmad/](https://github.com/MShirazAhmad/)
 
 ---
 
@@ -126,7 +134,8 @@ This project is licensed under the MIT License.
 
 **M. Shiraz Ahmad**  
 Physics Department, University of Alabama at Birmingham  
-Researcher in High-Entropy Ceramics & Plasma Processing
+Researcher in High-Entropy Ceramics & Plasma Processing  
+GitHub: [https://github.com/MShirazAhmad/](https://github.com/MShirazAhmad/)
 
 ---
 

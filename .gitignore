@@ -1,0 +1,11 @@
+
+
+
+# Ignore SQLite database
+db.sqlite3
+*.sqlite3
+
+# Ignore SQLite backups
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
