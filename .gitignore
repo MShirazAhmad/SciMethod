@@ -1,6 +1,9 @@
 
 
 
+# Ignore PyCharm project files
+.idea/
+
 # Ignore SQLite database
 db.sqlite3
 *.sqlite3
