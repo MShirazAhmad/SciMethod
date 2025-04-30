@@ -1,0 +1,77 @@
+{% extends "scientificmethod/base.html" %}
+{% block content %}
+
+<h1 class="text-center mb-4">🔬 Scientific Method Research Dashboard</h1>
+
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-primary h-100">
+            <div class="card-body">
+                <h5 class="card-title">🧠 Research Problems</h5>
+                <p class="card-text display-6">{{ problems_count }}</p>
+                <a href="{% url 'researchproblem_list' %}" class="btn btn-light btn-sm">View Problems</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-success h-100">
+            <div class="card-body">
+                <h5 class="card-title">❓ Research Questions</h5>
+                <p class="card-text display-6">{{ questions_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-info h-100">
+            <div class="card-body">
+                <h5 class="card-title">🔬 Hypotheses</h5>
+                <p>Supported: {{ supported_count }}</p>
+                <p>Refuted: {{ refuted_count }}</p>
+                <p>Pending/Modified: {{ pending_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-warning h-100">
+            <div class="card-body">
+                <h5 class="card-title">⚗️ Experiments</h5>
+                <p>Running: {{ running_count }}</p>
+                <p>Completed: {{ completed_count }}</p>
+                <p>Failed: {{ failed_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-secondary h-100">
+            <div class="card-body">
+                <h5 class="card-title">📈 Variables</h5>
+                <p class="card-text display-6">{{ variables_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-dark h-100">
+            <div class="card-body">
+                <h5 class="card-title">📊 Observations</h5>
+                <p class="card-text display-6">{{ observations_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="card text-white bg-danger h-100">
+            <div class="card-body">
+                <h5 class="card-title">🚨 Failure Logs</h5>
+                <p class="card-text display-6">{{ failures_count }}</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

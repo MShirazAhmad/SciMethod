@@ -1,0 +1,20 @@
+{% extends "scientificmethod/base.html" %}
+
+{% block content %}
+<div class="alert alert-info" role="alert">
+  <h4 class="alert-heading">Hypothesis</h4>
+  <p><strong>What to write:</strong> State a predictive explanation that can be tested through experiments or observations.</p>
+  <p><strong>How to write:</strong> Formulate clear, concise, testable, and falsifiable hypotheses. Connect logically to the research question.</p>
+</div>
+
+<h2>{% if edit_mode %}Edit{% else %}Create{% endif %} Hypothesis</h2>
+
+<form method="post" class="p-4 border rounded bg-light">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">{% if edit_mode %}Update{% else %}Save{% endif %}</button>
+</form>
+
+<br>
+<a href="{% url 'researchproblem_list' %}" class="btn btn-secondary">← Back</a>
+{% endblock %}

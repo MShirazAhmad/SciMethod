@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scientific Research Management</title>
+    <link rel="stylesheet" href="{% static 'scientificmethod/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1><a href="{% url 'researchproblem_list' %}">Scientific Research Platform</a></h1>
+        <h1><a href="{% url 'scientific_tree' %}">Scientific Tree</a></h1>
+        <li class="nav-item"><a class="nav-link" href="{% url 'scientific_tree' %}">Workflow Tree</a></li>
+
+        <hr>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <hr>
+        <p>Scientific Platform © {{ now|date:"Y" }}</p>
+    </footer>
+</body>
+</html>

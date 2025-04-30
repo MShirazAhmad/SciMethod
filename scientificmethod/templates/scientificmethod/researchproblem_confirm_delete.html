@@ -1,0 +1,13 @@
+{% extends "scientificmethod/base.html" %}
+
+{% block content %}
+<h2>Delete Research Problem</h2>
+
+<p>Are you sure you want to delete: <strong>{{ problem.title }}</strong>?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" style="background-color:red;">Yes, Delete</button>
+    <a href="{% url 'researchproblem_list' %}" class="button-link">Cancel</a>
+</form>
+{% endblock %}

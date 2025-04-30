@@ -1,0 +1,20 @@
+{% extends "scientificmethod/base.html" %}
+
+{% block content %}
+<div class="alert alert-info" role="alert">
+  <h4 class="alert-heading">Research Problem</h4>
+  <p><strong>What to write:</strong> Define the research problem clearly, explaining its significance and the gap in current knowledge or technology.</p>
+  <p><strong>How to write:</strong> Focus the description sharply; avoid vague generalizations. Show why solving this problem matters scientifically or practically.</p>
+</div>
+
+<h2>{% if edit_mode %}Edit{% else %}Create{% endif %} Research Problem</h2>
+
+<form method="post" class="p-4 border rounded bg-light">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">{% if edit_mode %}Update{% else %}Save{% endif %}</button>
+</form>
+
+<br>
+<a href="{% url 'researchproblem_list' %}" class="btn btn-secondary">← Back</a>
+{% endblock %}

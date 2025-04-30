@@ -1,0 +1,13 @@
+{% extends "scientificmethod/../scimethod/base.html" %}
+
+{% block content %}
+<h2>Hypothesis Detail</h2>
+
+<p><strong>Statement:</strong><br>{{ hypothesis.statement|linebreaks }}</p>
+<p><strong>Type:</strong> {{ hypothesis.get_hypothesis_type_display }}</p>
+<p><strong>Status:</strong> {{ hypothesis.status }}</p>
+<p><strong>Scientific Basis:</strong><br>{{ hypothesis.scientific_basis|default:"-"|linebreaks }}</p>
+<p><strong>Expected Outcome:</strong><br>{{ hypothesis.expected_outcome|default:"-"|linebreaks }}</p>
+
+<a href="{% url 'researchproblem_detail' hypothesis.research_question.research_problem.id %}">← Back to Research Problem</a>
+{% endblock %}

@@ -1,0 +1,76 @@
+/* styles.css - Scientific Research Platform */
+
+body {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    margin: 20px;
+    background-color: #f7f9fb;
+    color: #333;
+}
+
+header, footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #ddeeff;
+}
+
+h1 a {
+    text-decoration: none;
+    color: #004080;
+}
+
+h2, h3, h4, h5, h6 {
+    color: #003366;
+    margin-top: 20px;
+}
+
+ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+table, th, td {
+    border: 1px solid #aaa;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+thead {
+    background-color: #e0e7ff;
+}
+
+main {
+    margin-top: 20px;
+}
+
+button, .button-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #004080;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+button:hover, .button-link:hover {
+    background-color: #0066cc;
+}

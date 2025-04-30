@@ -1,0 +1,208 @@
+{% extends "scientificmethod/base.html" %}
+{% block content %}
+
+<h2 class="text-center mb-4">Scientific Method Full Tree 🌳</h2>
+
+<div id="scientific-tree"></div>
+
+<script>
+function loadTreeData() {
+    return [
+        {% for problem in problems %}
+        {
+            "id": "problem-{{ problem.id }}",
+            "text": "🧠 {{ problem.title|escapejs }}",
+            "state": { "opened": false },
+            "children": [
+                {% for question in problem.questions.all %}
+                {
+                    "id": "question-{{ question.id }}",
+                    "text": "❓ {{ question.question_text|escapejs }}",
+                    "state": { "opened": false },
+                    "children": [
+                        {% for hypothesis in question.hypotheses.all %}
+                        {
+                            "id": "hypothesis-{{ hypothesis.id }}",
+                            "text": "🔬 {{ hypothesis.statement|truncatechars:50|escapejs }}",
+                            "state": { "opened": false },
+                            "children": [
+                                {% for plan in hypothesis.experimental_plans.all %}
+                                {
+                                    "id": "plan-{{ plan.id }}",
+                                    "text": "📝 Plan: {{ plan.design_type|escapejs }}",
+                                    "state": { "opened": false },
+                                    "children": [
+                                        {% for experiment in plan.experiments.all %}
+                                        {
+                                            "id": "experiment-{{ experiment.id }}",
+                                            "text": "{% if experiment.status == 'Running' %}🏃{% elif experiment.status == 'Failed' %}❌{% else %}🏁{% endif %} ⚗️ {{ experiment.title|escapejs }}",
+                                            "a_attr": {
+                                                "title": "Status: {{ experiment.status }}"
+                                            },
+                                            "icon": false
+                                        }{% if not forloop.last %},{% endif %}
+                                        {% endfor %}
+                                    ]
+                                }{% if not forloop.last %},{% endif %}
+                                {% endfor %}
+                            ]
+                        }{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    ]
+                }{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ]
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+}
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    if (typeof $.fn.jstree === 'undefined') {
+        console.error("jsTree is not loaded properly.");
+        return;
+    }
+
+    $('#scientific-tree').jstree({
+        'core': {
+            'animation': 200,
+            'themes': { 'responsive': true },
+            'data': loadTreeData()
+        },
+        "plugins": ["contextmenu", "wholerow", "types"],
+        "contextmenu": {
+            "items": function ($node) {
+                let items = {};
+                let idParts = $node.id.split("-");
+                let type = idParts[0];
+                let id = idParts[1];
+
+                if (type === "problem") {
+                    items.addQuestion = {
+                        label: "➕ Add Research Question",
+                        action: function () {
+                            window.location.href = "/questions/add/" + id + "/";
+                        }
+                    };
+                    items.editItem = {
+                        label: "✏️ Edit Problem",
+                        action: function () {
+                            window.location.href = "/problems/" + id + "/edit/";
+                        }
+                    };
+                    items.deleteItem = {
+                        label: "🗑️ Delete Problem",
+                        action: function () {
+                            if (confirm('Delete this Research Problem?')) {
+                                window.location.href = "/problems/" + id + "/delete/";
+                            }
+                        }
+                    };
+                } else if (type === "question") {
+                    items.addHypothesis = {
+                        label: "➕ Add Hypothesis",
+                        action: function () {
+                            window.location.href = "/hypotheses/add/" + id + "/";
+                        }
+                    };
+                    items.editItem = {
+                        label: "✏️ Edit Question",
+                        action: function () {
+                            window.location.href = "/questions/" + id + "/edit/";
+                        }
+                    };
+                    items.deleteItem = {
+                        label: "🗑️ Delete Question",
+                        action: function () {
+                            if (confirm('Delete this Research Question?')) {
+                                window.location.href = "/questions/" + id + "/delete/";
+                            }
+                        }
+                    };
+                } else if (type === "hypothesis") {
+                    items.addPlan = {
+                        label: "➕ Add Experimental Plan",
+                        action: function () {
+                            window.location.href = "/plans/add/" + id + "/";
+                        }
+                    };
+                    items.editItem = {
+                        label: "✏️ Edit Hypothesis",
+                        action: function () {
+                            window.location.href = "/hypotheses/" + id + "/edit/";
+                        }
+                    };
+                    items.deleteItem = {
+                        label: "🗑️ Delete Hypothesis",
+                        action: function () {
+                            if (confirm('Delete this Hypothesis?')) {
+                                window.location.href = "/hypotheses/" + id + "/delete/";
+                            }
+                        }
+                    };
+                } else if (type === "plan") {
+                    items.addExperiment = {
+                        label: "➕ Add Experiment",
+                        action: function () {
+                            window.location.href = "/experiments/add/" + id + "/";
+                        }
+                    };
+                    items.editItem = {
+                        label: "✏️ Edit Plan",
+                        action: function () {
+                            window.location.href = "/plans/" + id + "/edit/";
+                        }
+                    };
+                    items.deleteItem = {
+                        label: "🗑️ Delete Plan",
+                        action: function () {
+                            if (confirm('Delete this Plan?')) {
+                                window.location.href = "/plans/" + id + "/delete/";
+                            }
+                        }
+                    };
+                } else if (type === "experiment") {
+                    items.addVariable = {
+                        label: "➕ Add Variable",
+                        action: function () {
+                            window.location.href = "/variables/add/" + id + "/";
+                        }
+                    };
+                    items.addObservation = {
+                        label: "➕ Add Observation",
+                        action: function () {
+                            window.location.href = "/observations/add/" + id + "/";
+                        }
+                    };
+                    items.addFailureLog = {
+                        label: "➕ Add Failure Log",
+                        action: function () {
+                            window.location.href = "/failures/add/" + id + "/";
+                        }
+                    };
+                    items.editItem = {
+                        label: "✏️ Edit Experiment",
+                        action: function () {
+                            window.location.href = "/experiments/" + id + "/edit/";
+                        }
+                    };
+                    items.deleteItem = {
+                        label: "🗑️ Delete Experiment",
+                        action: function () {
+                            if (confirm('Delete this Experiment?')) {
+                                window.location.href = "/experiments/" + id + "/delete/";
+                            }
+                        }
+                    };
+                }
+
+                return items;
+            }
+        }
+    });
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,6 @@
+asgiref==3.8.1
+Django==5.2
+django-extensions==4.1
+django-mdeditor==0.1.20
+numpy==2.2.5
+sqlparse==0.5.3

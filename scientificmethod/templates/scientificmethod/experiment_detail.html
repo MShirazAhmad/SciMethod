@@ -1,0 +1,86 @@
+{% extends "scientificmethod/base.html" %}
+
+{% block content %}
+<h2>Experiment Detail</h2>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{{ experiment.title }}</h5>
+        <p><strong>Status:</strong> {{ experiment.status }}</p>
+        {% if experiment.failure_reason %}
+        <p class="text-danger"><strong>Failure Reason:</strong> {{ experiment.failure_reason }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="mb-3">
+    <a href="{% url 'experiment_edit' experiment.id %}" class="btn btn-warning">Edit Experiment</a>
+</div>
+
+<hr>
+
+<h4>Variables</h4>
+<div class="text-end mb-3">
+    <a href="{% url 'variable_create' experiment.id %}" class="btn btn-success">+ Add Variable</a>
+</div>
+
+<ul class="list-group">
+    {% for variable in experiment.variables.all %}
+    <li class="list-group-item">{{ variable.name }} ({{ variable.variable_type }})</li>
+    {% empty %}
+    <li class="list-group-item">No variables yet.</li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h4>Observations</h4>
+<div class="text-end mb-3">
+    <a href="{% url 'observation_create' experiment.id %}" class="btn btn-success">+ Add Observation</a>
+</div>
+
+<ul class="list-group">
+    {% for observation in experiment.observations.all %}
+    <li class="list-group-item">{{ observation.variable.name }}: {{ observation.value }}</li>
+    {% empty %}
+    <li class="list-group-item">No observations yet.</li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h4>Failure Logs</h4>
+<div class="text-end mb-3">
+    <a href="{% url 'failurelog_create' experiment.id %}" class="btn btn-danger">+ Log Failure</a>
+</div>
+
+<ul class="list-group">
+    {% for failure in experiment.failure_logs.all %}
+    <li class="list-group-item">{{ failure.stage }} - {{ failure.description }}</li>
+    {% empty %}
+    <li class="list-group-item">No failures recorded.</li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h4>Version History</h4>
+{% if version_history %}
+    <ul class="list-group small-text">
+        {% for history in version_history %}
+            <li class="list-group-item">
+                <strong>{{ history.field_name }}</strong>:
+                <span class="text-muted">{{ history.old_value }}</span>
+                <strong>→</strong>
+                <span>{{ history.new_value }}</span><br>
+                <em>{{ history.created_at|date:"Y-m-d H:i" }}</em>
+                {% if history.edited_by %} by <strong>{{ history.edited_by }}</strong>{% endif %}
+                {% if history.change_reason %}<br><strong>Reason:</strong> {{ history.change_reason }}{% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="text-muted">No version history recorded for this experiment.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "scientificmethod/base.html" %}
+
+{% block content %}
+<div class="alert alert-info" role="alert">
+  <h4 class="alert-heading">Observation</h4>
+  <p><strong>What to write:</strong> Record the actual data collected during the experiment without interpretation.</p>
+  <p><strong>How to write:</strong> Stay objective. Record values accurately. Include dates and relevant conditions.</p>
+</div>
+
+<h2>{% if edit_mode %}Edit{% else %}Create{% endif %} Observation</h2>
+
+<form method="post" class="p-4 border rounded bg-light">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">{% if edit_mode %}Update{% else %}Save{% endif %}</button>
+</form>
+
+<br>
+<a href="{% url 'researchproblem_list' %}" class="btn btn-secondary">← Back</a>
+{% endblock %}

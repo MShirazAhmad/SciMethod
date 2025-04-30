@@ -1,0 +1,20 @@
+{% extends "scientificmethod/base.html" %}
+
+{% block content %}
+<div class="alert alert-info" role="alert">
+  <h4 class="alert-heading">Experiment</h4>
+  <p><strong>What to write:</strong> Describe the actual execution of the experimental plan, indicating setup, execution timeframes, and any deviations.</p>
+  <p><strong>How to write:</strong> Write factually and sequentially. Indicate experiment status: Planned, Running, Completed, or Failed.</p>
+</div>
+
+<h2>{% if edit_mode %}Edit{% else %}Create{% endif %} Experiment</h2>
+
+<form method="post" class="p-4 border rounded bg-light">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">{% if edit_mode %}Update{% else %}Save{% endif %}</button>
+</form>
+
+<br>
+<a href="{% url 'researchproblem_list' %}" class="btn btn-secondary">← Back</a>
+{% endblock %}

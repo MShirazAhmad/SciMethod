@@ -1,0 +1,20 @@
+{% extends "scientificmethod/base.html" %}
+
+{% block content %}
+<div class="alert alert-info" role="alert">
+  <h4 class="alert-heading">Research Question</h4>
+  <p><strong>What to write:</strong> Write a precise, answerable research question that directly stems from the research problem.</p>
+  <p><strong>How to write:</strong> Ensure the question is focused, specific, researchable, and significant. Avoid broad, untestable questions.</p>
+</div>
+
+<h2>{% if edit_mode %}Edit{% else %}Create{% endif %} Research Question</h2>
+
+<form method="post" class="p-4 border rounded bg-light">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">{% if edit_mode %}Update{% else %}Save{% endif %}</button>
+</form>
+
+<br>
+<a href="{% url 'researchproblem_list' %}" class="btn btn-secondary">← Back</a>
+{% endblock %}

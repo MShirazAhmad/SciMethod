@@ -1,0 +1,141 @@
+{% extends "scientificmethod/base.html" %}
+{% block content %}
+
+<style>
+    .print-header {
+        font-family: 'Times New Roman', Times, serif;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .section-title {
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: bold;
+        font-size: 1.5rem;
+        padding-bottom: 5px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+    .subsection-title {
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: bold;
+        font-size: 1.25rem;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+    .small-text {
+        font-size: 0.9rem;
+    }
+    .btn-action-group {
+        float: right;
+        margin-top: -30px;
+    }
+    hr {
+        border-top: 1px solid #999;
+    }
+    .collapse-section {
+        margin-left: 20px;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="print-header">
+    <h1>{{ researchproblem.title }}</h1>
+    <p class="small-text">Created: {{ researchproblem.created_at|date:"Y-m-d" }} | Last Updated: {{ researchproblem.updated_at|date:"Y-m-d" }}</p>
+</div>
+
+<div class="btn-action-group">
+    <a href="{% url 'researchproblem_update' pk=researchproblem.pk %}" class="btn btn-outline-primary btn-sm">✏️ Edit</a>
+    <a href="{% url 'researchproblem_delete' pk=researchproblem.pk %}" class="btn btn-outline-danger btn-sm">🗑️ Delete</a>
+    <a href="{% url 'researchquestion_create' researchproblem_id=researchproblem.pk %}" class="btn btn-outline-success btn-sm">➕ Add Question</a>
+    <a href="{% url 'researchproblem_list' %}" class="btn btn-outline-secondary btn-sm">🔙 All Problems</a>
+</div>
+
+<!-- Background Section -->
+<div class="section-title">1.0 Background</div>
+<button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#backgroundCollapse" aria-expanded="false" aria-controls="backgroundCollapse">
+    🔻 Show/Hide Background
+</button>
+<div id="backgroundCollapse" class="collapse collapse-section">
+    <p class="small-text">{{ researchproblem.background|linebreaks }}</p>
+</div>
+
+<!-- Goal Section -->
+<div class="section-title">2.0 Research Goal</div>
+<button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#goalCollapse" aria-expanded="false" aria-controls="goalCollapse">
+    🔻 Show/Hide Goal
+</button>
+<div id="goalCollapse" class="collapse collapse-section">
+    <p class="small-text">{{ researchproblem.goal|linebreaks }}</p>
+</div>
+
+<!-- Research Questions Section -->
+{% if researchproblem.questions.all %}
+    <div class="section-title">3.0 Research Questions</div>
+
+    {% for question in researchproblem.questions.all %}
+        <div class="subsection-title">3.{{ forloop.counter }} {{ question.question_text|truncatechars:140 }}</div>
+
+        <button class="btn btn-link btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#questionCollapse{{ question.id }}" aria-expanded="false" aria-controls="questionCollapse{{ question.id }}">
+            🔻 Show/Hide Details
+        </button>
+        <div id="questionCollapse{{ question.id }}" class="collapse collapse-section">
+            <p class="small-text"><strong>Rationale:</strong><br>{{ question.rationale|default:"-"|linebreaks }}</p>
+
+            {% if question.hypotheses.all %}
+                <div class="subsection-title ms-3">Hypotheses</div>
+
+                {% for hypothesis in question.hypotheses.all %}
+                    <div class="border-start ps-3 ms-3">
+                        <p><strong>🔬 {{ hypothesis.get_hypothesis_type_display }}:</strong> {{ hypothesis.statement|truncatechars:150 }}</p>
+                        <p class="small-text"><strong>Expected Outcome:</strong><br>{{ hypothesis.expected_outcome|default:"-"|linebreaks }}</p>
+
+                        <span class="badge {% if hypothesis.status == 'Supported' %}bg-success{% elif hypothesis.status == 'Refuted' %}bg-danger{% elif hypothesis.status == 'Pending' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                            {{ hypothesis.status }}
+                        </span>
+
+                        {% if hypothesis.experimental_plans.all %}
+                            <div class="subsection-title ms-4">Experimental Plans</div>
+
+                            {% for plan in hypothesis.experimental_plans.all %}
+                                <div class="border-start ps-3 ms-4">
+                                    <p><strong>📝 Plan Type:</strong> {{ plan.design_type }}</p>
+
+                                    <button class="btn btn-link btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#planCollapse{{ plan.id }}" aria-expanded="false" aria-controls="planCollapse{{ plan.id }}">
+                                        🔻 Show/Hide Plan Details
+                                    </button>
+
+                                    <div id="planCollapse{{ plan.id }}" class="collapse collapse-section">
+                                        <p class="small-text"><strong>Independent Variables:</strong><br> {{ plan.independent_variables|linebreaks }}</p>
+                                        <p class="small-text"><strong>Dependent Variables:</strong><br> {{ plan.dependent_variables|linebreaks }}</p>
+                                        <p class="small-text"><strong>Control Variables:</strong><br> {{ plan.control_variables|linebreaks }}</p>
+
+                                        {% if plan.experiments.all %}
+                                            <div class="subsection-title ms-4">Experiments</div>
+                                            {% for experiment in plan.experiments.all %}
+                                                <div class="border-start ps-3 ms-4 mb-3">
+                                                    ⚗️ <strong>{{ experiment.title }}</strong><br>
+                                                    <span class="badge {% if experiment.status == 'Completed' %}bg-success{% elif experiment.status == 'Failed' %}bg-danger{% elif experiment.status == 'Running' %}bg-primary{% else %}bg-secondary{% endif %}">
+                                                        {{ experiment.get_status_display }}
+                                                    </span>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <p class="text-muted small-text ms-4">No experiments yet.</p>
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <hr class="mt-4">
+    {% endfor %}
+{% else %}
+    <p class="text-muted">No research questions added yet.</p>
+{% endif %}
+
+{% endblock %}
