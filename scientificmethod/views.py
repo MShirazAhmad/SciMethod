@@ -1,3 +1,8 @@
+"""
+Views for managing scientific research objects including problems, questions, hypotheses, experimental plans,
+experiments, observations, variables, and failure logs. These views provide CRUD operations and render
+both standard and tree-based visualizations of the scientific method workflow.
+"""
 from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 from django.urls import reverse_lazy
@@ -8,9 +13,9 @@ from .models import (
 
 # === Home Page ===
 from django.shortcuts import render
-from .models import ResearchProblem, ResearchQuestion, Hypothesis, Experiment, Variable, Observation, FailureLog
 
 def home(request):
+    """Renders the home dashboard with summary statistics about the research project."""
     problems_count = ResearchProblem.objects.count()
     questions_count = ResearchQuestion.objects.count()
     hypotheses = Hypothesis.objects.all()
@@ -43,11 +48,13 @@ def home(request):
 
 # === Research Problem Views ===
 class ResearchProblemListView(generic.ListView):
+    """Displays a list of all Research Problems."""
     model = ResearchProblem
     template_name = 'scientificmethod/researchproblem_list.html'
     context_object_name = 'researchproblems'
 
 class ResearchProblemDetailView(generic.DetailView):
+    """Displays the detail page for a specific Research Problem, including its version history."""
     model = ResearchProblem
     template_name = 'scientificmethod/researchproblem_detail.html'
     context_object_name = 'researchproblem'
@@ -58,24 +65,28 @@ class ResearchProblemDetailView(generic.DetailView):
         return context
 
 class ResearchProblemCreateView(generic.CreateView):
+    """Provides a form to create a new Research Problem."""
     model = ResearchProblem
     fields = ['title', 'background', 'goal']
     template_name = 'scientificmethod/researchproblem_form.html'
     success_url = reverse_lazy('researchproblem_list')
 
 class ResearchProblemUpdateView(generic.UpdateView):
+    """Provides a form to update an existing Research Problem."""
     model = ResearchProblem
     fields = ['title', 'background', 'goal']
     template_name = 'scientificmethod/researchproblem_form.html'
     success_url = reverse_lazy('researchproblem_list')
 
 class ResearchProblemDeleteView(generic.DeleteView):
+    """Handles deletion of a Research Problem."""
     model = ResearchProblem
     template_name = 'scientificmethod/researchproblem_confirm_delete.html'
     success_url = reverse_lazy('researchproblem_list')
 
 # === Research Question Views ===
 class ResearchQuestionCreateView(generic.CreateView):
+    """Provides a form to create a new Research Question associated with a Research Problem."""
     model = ResearchQuestion
     fields = ['question_text', 'rationale']
     template_name = 'scientificmethod/researchquestion_form.html'
@@ -89,6 +100,7 @@ class ResearchQuestionCreateView(generic.CreateView):
         return reverse_lazy('researchproblem_detail', kwargs={'pk': self.object.research_problem.id})
 
 class ResearchQuestionUpdateView(generic.UpdateView):
+    """Provides a form to update an existing Research Question."""
     model = ResearchQuestion
     fields = ['question_text', 'rationale']
     template_name = 'scientificmethod/researchquestion_form.html'
@@ -96,8 +108,17 @@ class ResearchQuestionUpdateView(generic.UpdateView):
     def get_success_url(self):
         return reverse_lazy('researchproblem_detail', kwargs={'pk': self.object.research_problem.id})
 
+class ResearchQuestionDeleteView(generic.DeleteView):
+    """Handles deletion of a Research Question."""
+    model = ResearchQuestion
+    template_name = 'scientificmethod/confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy('researchproblem_detail', kwargs={'pk': self.object.research_problem.id})
+
 # === Hypothesis Views ===
 class HypothesisCreateView(generic.CreateView):
+    """Provides a form to create a new Hypothesis linked to a Research Question."""
     model = Hypothesis
     fields = ['statement', 'hypothesis_type', 'scientific_basis', 'expected_outcome']
     template_name = 'scientificmethod/hypothesis_form.html'
@@ -111,6 +132,7 @@ class HypothesisCreateView(generic.CreateView):
         return reverse_lazy('researchproblem_list')
 
 class HypothesisDetailView(generic.DetailView):
+    """Displays details of a Hypothesis including its version history."""
     model = Hypothesis
     template_name = 'scientificmethod/hypothesis_detail.html'
     context_object_name = 'hypothesis'
@@ -121,6 +143,7 @@ class HypothesisDetailView(generic.DetailView):
         return context
 
 class HypothesisUpdateView(generic.UpdateView):
+    """Provides a form to update an existing Hypothesis."""
     model = Hypothesis
     fields = ['statement', 'hypothesis_type', 'scientific_basis', 'expected_outcome', 'status', 'modification_notes']
     template_name = 'scientificmethod/hypothesis_form.html'
@@ -128,8 +151,17 @@ class HypothesisUpdateView(generic.UpdateView):
     def get_success_url(self):
         return reverse_lazy('researchproblem_list')
 
+class HypothesisDeleteView(generic.DeleteView):
+    """Handles deletion of a Hypothesis."""
+    model = Hypothesis
+    template_name = 'scientificmethod/confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy('researchproblem_list')
+
 # === Experimental Plan Views ===
 class ExperimentalPlanCreateView(generic.CreateView):
+    """Provides a form to create a new Experimental Plan linked to a Hypothesis."""
     model = ExperimentalPlan
     fields = ['design_type', 'independent_variables', 'dependent_variables', 'control_variables', 'planned_methods', 'notes']
     template_name = 'scientificmethod/experimentalplan_form.html'
@@ -142,8 +174,27 @@ class ExperimentalPlanCreateView(generic.CreateView):
     def get_success_url(self):
         return reverse_lazy('researchproblem_list')
 
+class ExperimentalPlanUpdateView(generic.UpdateView):
+    """Provides a form to update an existing Experimental Plan."""
+    model = ExperimentalPlan
+    fields = ['design_type', 'independent_variables', 'dependent_variables', 'control_variables', 'planned_methods',
+              'notes']
+    template_name = 'scientificmethod/experimentalplan_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('researchproblem_list')
+
+class ExperimentalPlanDeleteView(generic.DeleteView):
+    """Handles deletion of an Experimental Plan."""
+    model = ExperimentalPlan
+    template_name = 'scientificmethod/confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy('researchproblem_list')
+
 # === Experiment Views ===
 class ExperimentCreateView(generic.CreateView):
+    """Provides a form to create a new Experiment linked to an Experimental Plan."""
     model = Experiment
     fields = ['title', 'start_date', 'end_date', 'status', 'failure_reason', 'failure_stage']
     template_name = 'scientificmethod/experiment_form.html'
@@ -157,6 +208,7 @@ class ExperimentCreateView(generic.CreateView):
         return reverse_lazy('researchproblem_list')
 
 class ExperimentDetailView(generic.DetailView):
+    """Displays details of an Experiment including its version history."""
     model = Experiment
     template_name = 'scientificmethod/experiment_detail.html'
     context_object_name = 'experiment'
@@ -167,6 +219,7 @@ class ExperimentDetailView(generic.DetailView):
         return context
 
 class ExperimentUpdateView(generic.UpdateView):
+    """Provides a form to update an existing Experiment."""
     model = Experiment
     fields = ['title', 'start_date', 'end_date', 'status', 'failure_reason', 'failure_stage']
     template_name = 'scientificmethod/experiment_form.html'
@@ -174,8 +227,17 @@ class ExperimentUpdateView(generic.UpdateView):
     def get_success_url(self):
         return reverse_lazy('researchproblem_list')
 
+class ExperimentDeleteView(generic.DeleteView):
+    """Handles deletion of an Experiment."""
+    model = Experiment
+    template_name = 'scientificmethod/confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy('researchproblem_list')
+
 # === Variable Views ===
 class VariableCreateView(generic.CreateView):
+    """Provides a form to create a new Variable linked to an Experiment."""
     model = Variable
     fields = ['name', 'variable_type', 'measurement_unit']
     template_name = 'scientificmethod/variable_form.html'
@@ -188,8 +250,26 @@ class VariableCreateView(generic.CreateView):
     def get_success_url(self):
         return reverse_lazy('researchproblem_list')
 
+class VariableUpdateView(generic.UpdateView):
+    """Provides a form to update an existing Variable."""
+    model = Variable
+    fields = ['name', 'variable_type', 'measurement_unit']
+    template_name = 'scientificmethod/variable_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('researchproblem_list')
+
+class VariableDeleteView(generic.DeleteView):
+    """Handles deletion of a Variable."""
+    model = Variable
+    template_name = 'scientificmethod/confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy('researchproblem_list')
+
 # === Observation Views ===
 class ObservationCreateView(generic.CreateView):
+    """Provides a form to create a new Observation linked to an Experiment."""
     model = Observation
     fields = ['variable', 'value', 'observation_date', 'hypothesis_tested', 'result_support', 'notes']
     template_name = 'scientificmethod/observation_form.html'
@@ -202,8 +282,26 @@ class ObservationCreateView(generic.CreateView):
     def get_success_url(self):
         return reverse_lazy('researchproblem_list')
 
+class ObservationUpdateView(generic.UpdateView):
+    """Provides a form to update an existing Observation."""
+    model = Observation
+    fields = ['variable', 'value', 'observation_date', 'hypothesis_tested', 'result_support', 'notes']
+    template_name = 'scientificmethod/observation_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('researchproblem_list')
+
+class ObservationDeleteView(generic.DeleteView):
+    """Handles deletion of an Observation."""
+    model = Observation
+    template_name = 'scientificmethod/confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy('researchproblem_list')
+
 # === FailureLog Views ===
 class FailureLogCreateView(generic.CreateView):
+    """Provides a form to create a new Failure Log linked to an Experiment."""
     model = FailureLog
     fields = ['description', 'stage', 'corrective_action']
     template_name = 'scientificmethod/failurelog_form.html'
@@ -216,8 +314,26 @@ class FailureLogCreateView(generic.CreateView):
     def get_success_url(self):
         return reverse_lazy('researchproblem_list')
 
+class FailureLogUpdateView(generic.UpdateView):
+    """Provides a form to update an existing Failure Log."""
+    model = FailureLog
+    fields = ['description', 'stage', 'corrective_action']
+    template_name = 'scientificmethod/failurelog_form.html'
 
+    def get_success_url(self):
+        return reverse_lazy('researchproblem_list')
+
+class FailureLogDeleteView(generic.DeleteView):
+    """Handles deletion of a Failure Log."""
+    model = FailureLog
+    template_name = 'scientificmethod/confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy('researchproblem_list')
+
+# === Scientific Tree View ===
 class ScientificTreeView(generic.TemplateView):
+    """Renders a tree-based visualization of the scientific method workflow."""
     template_name = 'scientificmethod/treeview.html'
 
     def get_context_data(self, **kwargs):
@@ -225,114 +341,3 @@ class ScientificTreeView(generic.TemplateView):
         problems = ResearchProblem.objects.prefetch_related('questions__hypotheses__experimental_plans__experiments')
         context['problems'] = problems
         return context
-
-
-from django.urls import reverse_lazy
-from django.views import generic
-from .models import (
-    ResearchProblem, ResearchQuestion, Hypothesis, ExperimentalPlan,
-    Experiment, Variable, Observation, FailureLog
-)
-
-
-# --- Already existing ---
-# ResearchProblemListView, ResearchProblemDetailView, ResearchProblemCreateView, etc.
-
-# === ResearchQuestion Delete ===
-class ResearchQuestionDeleteView(generic.DeleteView):
-    model = ResearchQuestion
-    template_name = 'scientificmethod/confirm_delete.html'
-
-    def get_success_url(self):
-        return reverse_lazy('researchproblem_detail', kwargs={'pk': self.object.research_problem.id})
-
-
-# === Hypothesis Delete ===
-class HypothesisDeleteView(generic.DeleteView):
-    model = Hypothesis
-    template_name = 'scientificmethod/confirm_delete.html'
-
-    def get_success_url(self):
-        return reverse_lazy('researchproblem_list')
-
-
-# === ExperimentalPlan Update/Delete ===
-class ExperimentalPlanUpdateView(generic.UpdateView):
-    model = ExperimentalPlan
-    fields = ['design_type', 'independent_variables', 'dependent_variables', 'control_variables', 'planned_methods',
-              'notes']
-    template_name = 'scientificmethod/experimentalplan_form.html'
-
-    def get_success_url(self):
-        return reverse_lazy('researchproblem_list')
-
-
-class ExperimentalPlanDeleteView(generic.DeleteView):
-    model = ExperimentalPlan
-    template_name = 'scientificmethod/confirm_delete.html'
-
-    def get_success_url(self):
-        return reverse_lazy('researchproblem_list')
-
-
-# === Experiment Delete ===
-class ExperimentDeleteView(generic.DeleteView):
-    model = Experiment
-    template_name = 'scientificmethod/confirm_delete.html'
-
-    def get_success_url(self):
-        return reverse_lazy('researchproblem_list')
-
-
-# === Variable Update/Delete ===
-class VariableUpdateView(generic.UpdateView):
-    model = Variable
-    fields = ['name', 'variable_type', 'measurement_unit']
-    template_name = 'scientificmethod/variable_form.html'
-
-    def get_success_url(self):
-        return reverse_lazy('researchproblem_list')
-
-
-class VariableDeleteView(generic.DeleteView):
-    model = Variable
-    template_name = 'scientificmethod/confirm_delete.html'
-
-    def get_success_url(self):
-        return reverse_lazy('researchproblem_list')
-
-
-# === Observation Update/Delete ===
-class ObservationUpdateView(generic.UpdateView):
-    model = Observation
-    fields = ['variable', 'value', 'observation_date', 'hypothesis_tested', 'result_support', 'notes']
-    template_name = 'scientificmethod/observation_form.html'
-
-    def get_success_url(self):
-        return reverse_lazy('researchproblem_list')
-
-
-class ObservationDeleteView(generic.DeleteView):
-    model = Observation
-    template_name = 'scientificmethod/confirm_delete.html'
-
-    def get_success_url(self):
-        return reverse_lazy('researchproblem_list')
-
-
-# === FailureLog Update/Delete ===
-class FailureLogUpdateView(generic.UpdateView):
-    model = FailureLog
-    fields = ['description', 'stage', 'corrective_action']
-    template_name = 'scientificmethod/failurelog_form.html'
-
-    def get_success_url(self):
-        return reverse_lazy('researchproblem_list')
-
-
-class FailureLogDeleteView(generic.DeleteView):
-    model = FailureLog
-    template_name = 'scientificmethod/confirm_delete.html'
-
-    def get_success_url(self):
-        return reverse_lazy('researchproblem_list')
